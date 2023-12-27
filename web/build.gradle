@@ -19,11 +19,14 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven {
+		url 'https://repository.openai.com'
+	}
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
@@ -32,13 +35,26 @@ dependencies {
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
 	implementation 'javax.servlet:javax.servlet-api:4.0.1'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	compileOnly 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok:1.18.22'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'mysql:mysql-connector-java:8.0.32'
-	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok:1.18.22'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	// gpt
+//	implementation group: 'ai.openai', name: 'gpt', version: '0.2.1'
+	implementation 'com.openai:openai:0.27.0'
 }
+
+//tasks.withType(JavaCompile) {
+//	options.encoding = 'UTF-8'
+//}
+//
+//task runChatGPT(type: JavaExec) {
+//	classpath = sourceSets.main.runtimeClasspath
+//	main = 'com.posco.web.WebApplication'
+//	standardInput = System.in
+//}
 
 tasks.named('test') {
 	useJUnitPlatform()
