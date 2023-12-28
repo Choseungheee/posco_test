@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jdk.jshell.Snippet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +25,33 @@ public class UserEntity extends BaseEntity {
     @Column(name="password")
     private String password;
 
+    @Column
+    private String nickName;
+
+    @Column
+    private String email;
+
     @Column(name="name")
     private String name;
+
+    @Column(name="salary")
+    private String salary;
+
+    @Column
+    private Integer age;
+
+    @Column
+    private String profile;
+
+    public UserDTO toUserDTO(){
+        UserDTO user = UserDTO.builder()
+                .id(this.id)
+                .name(this.name)
+                .nickName(this.nickName)
+                .password(this.password)
+                .email(this.email)
+                .profile(this.profile)
+                .build();
+        return user;
+    }
 }

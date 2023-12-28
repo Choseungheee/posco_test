@@ -3,8 +3,643 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+<!--    <script>-->
+
+<!--        document.addEventListener('DOMContentLoaded', function() {-->
+<!--          var calendarEl = document.getElementById('calendar');-->
+<!--          var calendar = new FullCalendar.Calendar(calendarEl, {-->
+<!--            initialView: 'dayGridMonth'-->
+<!--          });-->
+<!--          calendar.render();-->
+<!--        });-->
+
+<!--    </script>-->
+    <style>
+        //css 코드
+
+* {
+  padding:0;
+  margin:0;
+  box-sizing: border-box;
+}
+
+//버튼을 감싸는 영역
+#btnWrap {
+  width: 500px;
+  margin: 100px auto;
+}
+
+//버튼 디자인
+#popupBtn {
+  width: 150px;
+  height: 50px;
+  padding: 10px 5px;
+}
+
+//모달팝업을 감싸고 있는 최상위 부모
+#modalWrap {
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+//모달 팝업창
+#modalBody {
+  width: 500px;
+  height: 300px;
+  padding: 30px 30px;
+  margin: 0 auto;
+  border: 1px solid #777;
+  background-color: #fff;
+}
+
+//닫기 버튼
+#closeBtn {
+  float:right;
+  font-weight: bold;
+  color: #777;
+  font-size:25px;
+  cursor: pointer;
+}
+    </style>
+    <script>
+        const btn = document.getElementById('popupBtn');
+const modal = document.getElementById('modalWrap');
+const closeBtn = document.getElementById('closeBtn');
+
+btn.onclick = function() {
+  modal.style.display = 'block';
+}
+closeBtn.onclick = function() {
+  modal.style.display = 'none';
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+    </script>
+    <style>
+
+<!--body {-->
+<!--    display: flex;-->
+<!--    flex-wrap: nowrap;-->
+<!--    justify-content: center;-->
+<!--    background-color: #F5F5F5;-->
+<!--    min-height: 100%;-->
+<!--}-->
+
+.todo-wrapper {
+    justify-content: center;
+    margin-top: 3rem;
+    min-width: 300px;
+}
+
+.todo-title {
+    padding: 2rem;
+    text-align: center;
+    color: rosybrown;
+    font-size: 5rem;
+}
+
+.todo-box {
+    background-color: white;
+    border: 1px solid #ddd;
+}
+
+.todo-input-box {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    height: 3rem;
+    border-bottom: 1px solid #ddd;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+button {
+    background-color: transparent;
+    border: 0;
+}
+
+.complete-all-btn {
+    color: gray;
+    min-width: none;
+    min-height: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0.5rem 0.5rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.2rem;
+
+}
+
+.complete-all-btn.checked {
+    color: green
+}
+
+.todo-input {
+    width: 80%;
+    text-align: center;
+    border: 0;
+    outline: none;
+    font-size: 1.3rem;
+}
+
+.todo-item {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 3rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.todo-item:hover .delBtn {
+    opacity: 1;
+}
+
+.checkbox {
+    min-width: none;
+    min-height: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0.5rem 0.5rem;
+    border-radius: 50px;
+    border: 1px solid lightgray;
+    cursor: pointer;
+    text-align: center;
+}
+
+.todo-item.checked .checkbox{
+    border: 2px solid darkgray;
+    color: green;
+}
+
+.todo {
+    font-size: 1.3rem;
+    padding: 0 1rem;
+    width: 80%;
+}
+
+.todo-item.checked .todo{
+ font-style: italic;
+ text-decoration: line-through;
+ color: lightgray;
+}
+
+.delBtn {
+    opacity: 1;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+    font-weight: lighter;
+    cursor: pointer;
+}
+
+.todo-bottom {
+    height: 3rem;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.button-group{
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.button-group button {
+    border: 1px solid #eee;
+    padding: 0.2rem 0.5rem;
+    margin: 0 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.button-group button.selected {
+    border: 2px solid rosybrown;
+    padding: 0.2rem 0.5rem;
+    margin: 0 0.5rem;
+    border-radius: 8px;
+}
+
+.clear-completed-btn:hover {
+    font-style: italic;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.edit-input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 590px;
+    height: 2.8rem;
+    margin: 0;
+}
+
+p.info {
+    margin-top: 1.5rem;
+    text-align: center;
+    color: #ccc;
+}
+        div.left{
+            width:55%;
+            float:left;
+            margin:5%;
+        }
+        div.right{
+               width:30%;
+            float:right;
+            margin-right:5%;
+        }
+    </style>
+
 </head>
 <body>
+
+<div id="btnWrap">
+    <button type="button" id="popupBtn">모달 팝업 띄우기</button>
+</div>
+
+<div id="modalWrap">
+    <div id="modalContent">
+        <div id="modalBody">
+            <span id="closeBtn">&times;</span>
+            <p>modal-popup 입니다.</p>
+        </div>
+    </div>
+</div>
     <p th:text="'Hi' + ${data}"> Hi banker</p>
+<div class="left">
+    <div id='calendar'></div>
+<a href="/myPage">mypage</a>
+    <div>
+        <span class="nowtime"></span>
+        <span>현재날씨</span>
+
+        <h3>서울</h3>
+        <h3 class="SeoulIcon"></h3>
+        <h3 class="SeoulNowtemp">현재기온:</h3>
+        <h3 class="SeoulLowtemp">최저기온:</h3>
+        <h3 class="SeoulHightemp">최고기온:</h3>
+    </div>
+    <div>
+        <span class="nexttime"></span>
+        <span>내일날씨</span>
+
+        <h3>서울</h3>
+        <h3 class="SeoulIcon"></h3>
+        <h3 class="NextSeoulLowtemp">최저기온:</h3>
+        <h3 class="NextSeoulHightemp">최고기온:</h3>
+    </div>
+</div>
+
+<div class="right">
+
+<div class="todo-wrapper">
+    <div class="todo-title">Things to do</div>
+    <div class="todo-box">
+
+        <div class="todo-input-box">
+            <button class="complete-all-btn">✔</button>
+            <input type="text" class="todo-input" placeholder="해야 할 일을 입력해주세요.">
+        </div>
+
+        <ul class="todo-list">
+<!--            {!&#45;&#45; <li class="todo-item checked">-->
+<!--            <div class="checkbox">✔</div>-->
+<!--            <div class="todo">첫번째 할 일</div>-->
+<!--            <button class="delBtn">x</button>-->
+<!--        </li>-->
+<!--            <li class="todo-item">-->
+<!--                <div class="checkbox"></div>-->
+<!--                <div class="todo">두번째 할 일</div>-->
+<!--                <button class="delBtn">x</button>-->
+<!--            </li>-->
+<!--            <li class="todo-item">-->
+<!--                <div class="checkbox"></div>-->
+<!--                <div class="todo">세번째 할 일</div>-->
+<!--                <button class="delBtn">x</button>-->
+<!--            </li> &#45;&#45;!}-->
+        </ul>
+        <div class="todo-bottom">
+            <div class="left-items">3 items left</div>
+            <div class="button-group">
+                <button class="show-all-btn selected" data-type="all">All</button>
+                <button class="show-active-btn" data-type="active">Active</button>
+                <button class="show-completed-btn" data-type="completed">Completed</button>
+            </div>
+            <button class="clear-completed-btn">Clear Completed</button>
+        </div>
+    </div>
+    <p class='info'>더블클릭 시 수정 가능!</p>
+</div>
+
+</div>
+<script>
+    $(document).ready(function () {
+
+    function convertTime() {
+        var now = new Date();
+
+
+        var month = now.getMonth() + 1;
+        var date = now.getDate();
+
+        return month + '월' + date + '일';
+    }
+
+    var currentTime = convertTime();
+    $('.nowtime').append(currentTime);
+});
+
+
+//제이쿼리사용
+$.getJSON('https://api.openweathermap.org/data/2.5/weather?q=Seoul,kr&appid=46b55a9f61cc588200575a3dda8e3069&units=metric',
+function (WeatherResult) {
+    //기온출력
+    $('.SeoulNowtemp').append(Math.round(WeatherResult.main.temp));
+    $('.SeoulLowtemp').append(Math.round(WeatherResult.main.temp_min));
+    $('.SeoulHightemp').append(Math.round(WeatherResult.main.temp_max));
+$('.SeoulNexttemp').append(Math.round(WeatherResult.main.temp));
+    $('.NextSeoulLowtemp').append(Math.round(WeatherResult.main.temp_min));
+    $('.NextSeoulHightemp').append(Math.round(WeatherResult.main.temp_max));
+    //날씨아이콘출력
+    //WeatherResult.weater[0].icon
+    var weathericonUrl =
+        '<img src= "http://openweathermap.org/img/wn/'
+        + WeatherResult.weather[0].icon +
+        '.png" alt="' + WeatherResult.weather[0].description + '"/>'
+
+    $('.SeoulIcon').html(weathericonUrl);
+});
+</script>
+<script>
+    const todoInputElem = document.querySelector('.todo-input');
+ const todoListElem = document.querySelector('.todo-list');
+ const completeAllBtnElem = document.querySelector('.complete-all-btn');
+ const leftItemsElem = document.querySelector('.left-items')
+ const showAllBtnElem = document.querySelector('.show-all-btn');
+ const showActiveBtnElem = document.querySelector('.show-active-btn');
+ const showCompletedBtnElem = document.querySelector('.show-completed-btn');
+ const clearCompletedBtnElem = document.querySelector('.clear-completed-btn');
+
+
+ let id = 0;
+ const setId = (newId) => {id = newId};
+
+ let isAllCompleted = false; // 전체 todos 체크 여부
+ const setIsAllCompleted = (bool) => { isAllCompleted = bool};
+
+ let currentShowType = 'all'; // all  | active | complete
+ const setCurrentShowType = (newShowType) => currentShowType = newShowType
+
+ let todos = [];
+ const setTodos = (newTodos) => {
+     todos = newTodos;
+ }
+
+ const getAllTodos = () => {
+     return todos;
+ }
+ const getCompletedTodos = () => {
+     return todos.filter(todo => todo.isCompleted === true );
+ }
+ const getActiveTodos = () => {
+     return todos.filter(todo => todo.isCompleted === false);
+ }
+
+ const setLeftItems = () => {
+     const leftTodos = getActiveTodos()
+     leftItemsElem.innerHTML = `${leftTodos.length} items left`
+ }
+
+ const completeAll = () => {
+     completeAllBtnElem.classList.add('checked');
+     const newTodos = getAllTodos().map(todo => ({...todo, isCompleted: true }) )
+     setTodos(newTodos)
+ }
+
+ const incompleteAll = () => {
+     completeAllBtnElem.classList.remove('checked');
+     const newTodos =  getAllTodos().map(todo => ({...todo, isCompleted: false }) );
+     setTodos(newTodos)
+ }
+
+ // 전체 todos의 check 여부 (isCompleted)
+ const checkIsAllCompleted = () => {
+     if(getAllTodos().length === getCompletedTodos().length ){
+         setIsAllCompleted(true);
+         completeAllBtnElem.classList.add('checked');
+     }else {
+         setIsAllCompleted(false);
+         completeAllBtnElem.classList.remove('checked');
+     }
+ }
+
+ const onClickCompleteAll = () => {
+     if(!getAllTodos().length) return; // todos배열의 길이가 0이면 return;
+
+     if(isAllCompleted) incompleteAll(); // isAllCompleted가 true이면 todos를 전체 미완료 처리
+     else completeAll(); // isAllCompleted가 false이면 todos를 전체 완료 처리
+     setIsAllCompleted(!isAllCompleted); // isAllCompleted 토글
+     paintTodos(); // 새로운 todos를 렌더링
+     setLeftItems()
+ }
+
+ const appendTodos = (text) => {
+     const newId = id + 1; // 기존에 i++ 로 작성했던 부분을 setId()를 통해 id값을 갱신하였다.
+     setId(newId)
+     const newTodos = getAllTodos().concat({id: newId, isCompleted: false, content: text })
+     // const newTodos = [...getAllTodos(), {id: newId, isCompleted: false, content: text }]
+     setTodos(newTodos)
+     setLeftItems()
+     checkIsAllCompleted();
+     paintTodos();
+ }
+
+ const deleteTodo = (todoId) => {
+     const newTodos = getAllTodos().filter(todo => todo.id !== todoId );
+     setTodos(newTodos);
+     setLeftItems()
+     paintTodos()
+ }
+
+ const completeTodo = (todoId) => {
+     const newTodos = getAllTodos().map(todo => todo.id === todoId ? {...todo,  isCompleted: !todo.isCompleted} : todo )
+     setTodos(newTodos);
+     paintTodos();
+     setLeftItems()
+     checkIsAllCompleted();
+ }
+
+ const updateTodo = (text, todoId) => {
+     const currentTodos = getAllTodos();
+     const newTodos = currentTodos.map(todo => todo.id === todoId ? ({...todo, content: text}) : todo);
+     setTodos(newTodos);
+     paintTodos();
+ }
+
+ const onDbclickTodo = (e, todoId) => {
+     const todoElem = e.target;
+     const inputText = e.target.innerText;
+     const todoItemElem = todoElem.parentNode;
+     const inputElem = document.createElement('input');
+     inputElem.value = inputText;
+     inputElem.classList.add('edit-input');
+     inputElem.addEventListener('keypress', (e)=>{
+         if(e.key === 'Enter') {
+             updateTodo(e.target.value, todoId);
+             document.body.removeEventListener('click', onClickBody );
+         }
+     })
+
+     const onClickBody = (e) => {
+         if(e.target !== inputElem)  {
+             todoItemElem.removeChild(inputElem);
+             document.body.removeEventListener('click', onClickBody );
+         }
+     }
+
+     document.body.addEventListener('click', onClickBody)
+     todoItemElem.appendChild(inputElem);
+ }
+
+ const clearCompletedTodos = () => {
+     const newTodos = getActiveTodos()
+     setTodos(newTodos)
+     paintTodos();
+ }
+
+ const paintTodo = (todo) => {
+     const todoItemElem = document.createElement('li');
+     todoItemElem.classList.add('todo-item');
+
+     todoItemElem.setAttribute('data-id', todo.id );
+
+     const checkboxElem = document.createElement('div');
+     checkboxElem.classList.add('checkbox');
+     checkboxElem.addEventListener('click', () => completeTodo(todo.id))
+
+     const todoElem = document.createElement('div');
+     todoElem.classList.add('todo');
+     todoElem.addEventListener('dblclick', (event) => onDbclickTodo(event, todo.id))
+     todoElem.innerText = todo.content;
+
+     const delBtnElem = document.createElement('button');
+     delBtnElem.classList.add('delBtn');
+     delBtnElem.addEventListener('click', () =>  deleteTodo(todo.id))
+     delBtnElem.innerHTML = 'X';
+
+     if(todo.isCompleted) {
+         todoItemElem.classList.add('checked');
+         checkboxElem.innerText = '✔';
+     }
+
+     todoItemElem.appendChild(checkboxElem);
+     todoItemElem.appendChild(todoElem);
+     todoItemElem.appendChild(delBtnElem);
+
+     todoListElem.appendChild(todoItemElem);
+ }
+
+ const paintTodos = () => {
+     todoListElem.innerHTML = '';
+
+     switch (currentShowType) {
+         case 'all':
+             const allTodos = getAllTodos();
+             allTodos.forEach(todo => { paintTodo(todo);});
+             break;
+         case 'active':
+             const activeTodos = getActiveTodos();
+             activeTodos.forEach(todo => { paintTodo(todo);});
+             break;
+         case 'completed':
+             const completedTodos = getCompletedTodos();
+             completedTodos.forEach(todo => { paintTodo(todo);});
+             break;
+         default:
+             break;
+     }
+ }
+
+ const onClickShowTodosType = (e) => {
+     const currentBtnElem = e.target;
+     const newShowType = currentBtnElem.dataset.type;
+
+     if ( currentShowType === newShowType ) return;
+
+     const preBtnElem = document.querySelector(`.show-${currentShowType}-btn`);
+     preBtnElem.classList.remove('selected');
+
+     currentBtnElem.classList.add('selected')
+     setCurrentShowType(newShowType)
+     paintTodos();
+ }
+
+ const init = () => {
+     todoInputElem.addEventListener('keypress', (e) =>{
+         if( e.key === 'Enter' ){
+             appendTodos(e.target.value); todoInputElem.value ='';
+         }
+     })
+     completeAllBtnElem.addEventListener('click',  onClickCompleteAll);
+     showAllBtnElem.addEventListener('click', onClickShowTodosType);
+     showActiveBtnElem.addEventListener('click',onClickShowTodosType);
+     showCompletedBtnElem.addEventListener('click',onClickShowTodosType);
+     clearCompletedBtnElem.addEventListener('click', clearCompletedTodos);
+     setLeftItems()
+ }
+
+ init()
+</script>
+<!--    <div id="dp"></div>-->
+
+<!--    &lt;!&ndash; DayPilot library &ndash;&gt;-->
+<!--    <script src="js/daypilot/daypilot-all.min.js"></script>-->
+
+<!--    &lt;!&ndash; calendar initialization and config &ndash;&gt;-->
+<!--    <script>-->
+
+<!--        const calendar = new DayPilot.Month("dp");-->
+<!--        calendar.init();-->
+
+<!--    </script>-->
 </body>
+<script>
+
+    var calendarEl = document.getElementById('calendar');
+    var request = $.ajax({
+      url: "/event",
+      method: "GET",
+    });
+    request.done(function(data){
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: data
+      });
+      calendar.render();
+    });
+</script>
 </html>
