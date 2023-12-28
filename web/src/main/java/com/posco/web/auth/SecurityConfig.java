@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -22,15 +23,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 사용 하지않음
-                .and()
-                .authorizeRequests()
-                .anyRequest().permitAll()
-                .and()
-                .cors().configurationSource(corsConfigurationSource())
-                .and().build();
+        return http.csrf(csrf -> csrf.disable())
+                .sessionManagement((sessionManagement) ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .authorizeRequests((authorizeRequests) ->
+                        authorizeRequests.anyRequest().permitAll()
+                )
+                .cors((cors) -> cors.configurationSource(corsConfigurationSource()))
+                .build();
     }
 
     @Bean

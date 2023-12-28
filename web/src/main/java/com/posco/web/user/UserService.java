@@ -5,7 +5,7 @@ import com.posco.web.auth.TokenDTO;
 import com.posco.web.auth.TokenEntity;
 import org.springframework.stereotype.Service;
 
-@Service
+
 public interface UserService {
     boolean isExistById(String id);
 

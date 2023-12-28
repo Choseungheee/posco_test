@@ -1,20 +1,25 @@
 package com.posco.web.user;
 
-import com.posco.web.auth.LoginDTO;
-import com.posco.web.auth.TokenDTO;
-import com.posco.web.auth.TokenEntity;
-import com.posco.web.auth.TokenRepository;
+import com.posco.web.auth.*;
+import com.posco.web.common.CustomException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
+@Service
 public class UserServiceImpl implements UserService{
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
     private TokenRepository tokenRepository;
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
@@ -41,8 +46,6 @@ public class UserServiceImpl implements UserService{
                 .password(passwordEncoder.encode(signUpDTO.getPassword()))
                 .email(signUpDTO.getEmail())
                 .nickName(signUpDTO.getNickName())
-                .level(1L)
-                .exp(0L)
                 .build();
 
         return userRepository.save(userEntity);
@@ -64,8 +67,6 @@ public class UserServiceImpl implements UserService{
                 .password(userDTO.getPassword()==null? user.getPassword():passwordEncoder.encode(userDTO.getPassword()))
                 .profile(userDTO.getProfile()==null? user.getProfile(): userDTO.getProfile())
                 .name(user.getName())
-                .exp(user.getExp())
-                .level(user.getLevel())
                 .build();
         UserEntity result = userRepository.save(newUser);
         if(result==null) return false;
@@ -89,23 +90,25 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public TokenDTO loginUser(LoginDTO loginDTO) {
-        UserEntity findUser = userRepository.findById(loginDTO.getId()).orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+        UserEntity findUser = userRepository.findByEmail(loginDTO.getEmail());//.orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
 
-        if(!passwordEncoder.matches(loginDTO.getPassword(),findUser.getPassword())){
-            throw new CustomException(HttpStatus.BAD_REQUEST, "잘못된 비밀번호입니다.");
-        }
-        if(tokenRepository.existsByUserId(loginDTO.getId())){
-            tokenRepository.deleteByUserId(loginDTO.getId());
+//        if(!passwordEncoder.matches(loginDTO.getPassword(),findUser.getPassword())){
+        System.out.println(loginDTO.getPassword()+" "+findUser.getPassword());
+//        if(loginDTO.getPassword().equals(findUser.getPassword())){
+//            throw new CustomException(HttpStatus.BAD_REQUEST, "잘못된 비밀번호입니다.");
+//        }
+        if(tokenRepository.existsByUserId(loginDTO.getEmail())){
+            tokenRepository.deleteByUserId(loginDTO.getEmail());
         }
         String accessToken = JwtTokenProvider.makeAccessToken(findUser.toUserDTO());
         String refreshToken = JwtTokenProvider.makeRefreshToken(findUser.getId());
-
+        System.out.println("토큰 생성");
         TokenEntity tokenEntity = TokenEntity.builder()
                 .userEntity(findUser)
                 .refreshToken(refreshToken)
                 .build();
         tokenRepository.save(tokenEntity);
-
+        System.out.println("토큰 저장");
         return TokenDTO.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)

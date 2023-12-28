@@ -5,8 +5,10 @@ import com.posco.web.common.MessageWithToken;
 import com.posco.web.user.UserDTO;
 import com.posco.web.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,15 +19,18 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
 
+    @Autowired
     private UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity loginUser(@RequestBody LoginDTO loginDTO){
-        if(!userService.isExistById(loginDTO.getId())){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message("존재하지 않는 사용자 입니다"));
-        }
+    public String loginUser(@RequestParam String email, @RequestParam String password, Model model){
+//        if(!userService.isExistById(loginDTO.getId())){
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message("존재하지 않는 사용자 입니다"));
+//        }\
+        LoginDTO loginDTO = LoginDTO.builder().email(email).password(password).build();
         TokenDTO tokenDTO = userService.loginUser(loginDTO);
-        return ResponseEntity.ok(new MessageWithToken("로그인 성공", tokenDTO));
+        model.addAttribute("loginUser", loginDTO);
+        return "myPage";
     }
 
     @PostMapping("/refresh")

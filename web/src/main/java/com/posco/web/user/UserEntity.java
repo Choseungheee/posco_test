@@ -43,4 +43,15 @@ public class UserEntity extends BaseEntity {
     @Column
     private String profile;
 
+    public UserDTO toUserDTO(){
+        UserDTO user = UserDTO.builder()
+                .id(this.id)
+                .name(this.name)
+                .nickName(this.nickName)
+                .password(this.password)
+                .email(this.email)
+                .profile(this.profile)
+                .build();
+        return user;
+    }
 }

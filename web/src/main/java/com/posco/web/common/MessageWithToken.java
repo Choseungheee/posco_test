@@ -4,7 +4,7 @@ import com.posco.web.auth.TokenDTO;
 import lombok.Getter;
 
 @Getter
-public class MessageWithToken {
+public class MessageWithToken extends Message{
     private final TokenDTO token;
 
     public MessageWithToken(String message, TokenDTO tokenDTO) {

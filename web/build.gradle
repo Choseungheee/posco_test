@@ -41,9 +41,13 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+//	implementation 'com.auth0:java-jwt:4.2.0'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	// gpt
 //	implementation group: 'ai.openai', name: 'gpt', version: '0.2.1'
-	implementation 'com.openai:openai:0.27.0'
+//	implementation 'com.openai:openai:0.27.0'
 }
 
 //tasks.withType(JavaCompile) {

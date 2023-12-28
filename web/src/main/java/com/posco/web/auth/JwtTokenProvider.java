@@ -1,6 +1,8 @@
 package com.posco.web.auth;
 
 import com.posco.web.user.UserDTO;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +44,7 @@ public class JwtTokenProvider {
                 .claim("id", userDTO.getId())
                 .claim("email", userDTO.getEmail())
                 .claim("nickName", userDTO.getNickName())
-                .signWith(KEY,SignatureAlgorithm.HS256)
+                .signWith(KEY, SignatureAlgorithm.HS256)
                 .compact();
     }
 
