@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -240,7 +240,7 @@ p{
                         <p class="mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
                     </div>
                     <!--title-->
-                    <form method="post" action="/login" name="form" class="form  w-100 p-4" enctype="application/json">
+                    <form method="post" action="/login" name="form" class="form  w-100 p-4" id="form">
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" name="email" class="form-control" id="email" onfocus="labelUp(this)" onblur="labelDown(this)" required />
