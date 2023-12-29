@@ -138,4 +138,10 @@ public class UserServiceImpl implements UserService{
         tokenRepository.deleteByUserId(userId);
     }
 
+    @Override
+    public String getId(String email) {
+        UserEntity user = userRepository.findByEmail(email);
+        return user.getId();
+    }
+
 }

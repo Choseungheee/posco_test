@@ -30,4 +30,6 @@ public interface UserService {
     String getToken(String userId);
 
     void deleteToken(String userId);
+
+    String getId(String email);
 }

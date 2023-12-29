@@ -23,14 +23,14 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/login")
-    public String loginUser(@RequestParam String email, @RequestParam String password, Model model){
+    public String loginUser(@RequestBody LoginDTO loginDTO, Model model){
 //        if(!userService.isExistById(loginDTO.getId())){
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message("존재하지 않는 사용자 입니다"));
 //        }\
-        LoginDTO loginDTO = LoginDTO.builder().email(email).password(password).build();
+//        LoginDTO loginDTO = LoginDTO.builder().email(email).password(password).build();
         TokenDTO tokenDTO = userService.loginUser(loginDTO);
         model.addAttribute("loginUser", loginDTO);
-        return "myPage";
+        return "/myPage";
     }
 
     @PostMapping("/refresh")

@@ -3,6 +3,8 @@ package com.posco.web;
 import com.posco.web.auth.LoginDTO;
 import com.posco.web.auth.TokenDTO;
 import com.posco.web.user.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +24,12 @@ public class WebController {
     @RequestMapping(value = "/loginPage", method = RequestMethod.GET)
     public String login(Model model){
         return "login";
+    }
+    @RequestMapping(value = "/addTodo", method = RequestMethod.POST)
+    public String insertTodo(@RequestParam String todo, @RequestParam String id, Model model){
+        calendarService.addTodo(todo, id);
+        System.out.println(id);
+        return "redirect:test";
     }
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(Model model){
@@ -142,17 +150,24 @@ public class WebController {
         return "myPage";
     }
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String loginUser(@RequestParam String email, @RequestParam String password, Model model){
+    public String loginUser(@RequestParam String email, @RequestParam String password, Model model, HttpServletRequest request){
 //        if(!userService.isExistById(loginDTO.getId())){
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message("존재하지 않는 사용자 입니다"));
 //        }\
         LoginDTO loginDTO = LoginDTO.builder().email(email).password(password).build();
         TokenDTO tokenDTO = userService.loginUser(loginDTO);
-        model.addAttribute("loginUser", loginDTO);
+        String userId = userService.getId(loginDTO.getEmail());
+        System.out.println("userId"+userId);
+        model.addAttribute("userId", userId);
+//        HttpSession session = (HttpSession) request.getSession();
+//        session.setAttribute("loginUser", loginDTO);
         return "test";
     }
+
     @GetMapping("/event") //ajax 데이터 전송 URL
     public @ResponseBody List<Map<String, Object>> getEvent(){
         return calendarService.getEventList();
     }
+
+
 }
